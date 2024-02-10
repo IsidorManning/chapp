@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+	<head>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,100;1,300;1,400&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="../../static/style.css">
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="navbar">
+				<h1 class="font" style="color: #00cc47; margin-left: 25px;">
+					Chapp
+				</h1>
+
+				<br>
+				
+				<div class="navbar-right font">
+
+					{% if request.user.is_authenticated %}
+					Hi {{request.user}}!
+
+					<a href = "{% url 'logout-user' %}">
+						<img class="logout-icon" src="{% static '/logout.svg' %}" alt="Logout">
+					</a>
+
+				</div>
+			</div>
+
+			{% endif %}
+
+			<div class="chat-container" style="font-size: 20px">
+
+				<div class="msg-discription">
+					<div class="reciever-profile-container">
+						<h3 class="reciever-profile-name font" id="reciever-profile-name"></h3>
+					</div>
+				</div>
+
+				<hr>
+				<center>
+					<h4 style="margin-top: 5px; font-size: 12px;" class="font">Chapp Message</h4>
+				</center>
+
+				<div class="message-container" id="message_container">
+					<div class="message-container-reciever" id="id_chat_item_container_reciever"></div>
+					<div class="message-container-user" id="id_chat_item_container_user"></div>
+				</div>
+
+				<div class="chat-input-window">
+					<div class="chat-input-container">
+						<textarea class="text-input" type="text" id="id_message_send_input"></textarea>
+						<div class="send-button-container">
+							<button class="send-button" type="submit" id="id_message_send_button">
+								<img class="send-button-img" src="{% static 'send.svg' %}" alt="Send">
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+<script src="{% static 'functionality.js' %}"></script>
+<script>
+    const chatSocket = new WebSocket("ws://" + window.location.host + "/");
+    chatSocket.onopen = function (e) {
+        console.log("The connection was set up successfully!");
+    };
+    chatSocket.onclose = function (e) {
+        console.log("Something unexpected happened!");
+    };
+    document.querySelector("#id_message_send_input").focus();
+    document.querySelector("#id_message_send_input").onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            document.querySelector("#id_message_send_button").click();
+        }
+    };
+    document.querySelector("#id_message_send_button").onclick = function (e) {
+        var messageInput = document.querySelector("#id_message_send_input").value;
+        chatSocket.send(JSON.stringify({ message: messageInput, username: "{{request.user.username}}" }));
+    };
+
+		const chat = new Chat("{{request.user}}")
+    chatSocket.onmessage = function (e) {
+        chat.handleMessage(e);
+    };
+		</script>
+	</body>
+</html>

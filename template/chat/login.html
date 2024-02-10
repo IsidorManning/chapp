@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,100;1,300;1,400&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../../static/style.css">
+    </head>
+   
+
+    <body>
+        <div class="container">
+            <div class="login">
+
+                <h2 class="header font" style="color: white;">
+                    Welcome to Chapp!
+                </h2>
+                
+                <form method="post">
+                    {% csrf_token %}
+
+                    <input type="text" id="username" 
+                    name="username" placeholder="Username" required>
+
+                    <input type="password" id="password" 
+                    name="password" placeholder="Password" required>
+                    
+                    <br>
+
+                    <div class="buttons">
+                        <button class="font button1" type="submit">Login</button>
+                    </div>
+                </form>
+
+            </div>
+            <a href="/auth/signup">
+                <button class="font button2">Sign up</button>
+            </a>
+        </div>
+    </body>
+</html>
